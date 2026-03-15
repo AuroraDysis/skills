@@ -3,14 +3,12 @@
     "name": "codex",
     "local_path": "codex/SKILL.md",
     "upstream_url": "https://raw.githubusercontent.com/skills-directory/skill-codex/main/plugins/skill-codex/skills/codex/SKILL.md",
-    "mode": "notify",
     "md5": "8c9f4e63b574d0ba7247dd5480e064e2"
   },
   {
     "name": "alphaxiv-paper-lookup",
     "local_path": "alphaxiv-paper-lookup/SKILL.md",
     "upstream_url": "https://www.alphaxiv.org/skills/alphaxiv-paper-lookup/SKILL.md",
-    "mode": "sync",
     "md5": "cf5302025c6983036b2c0abb4986aafd"
   }
 ]

@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Check upstream skill sources and sync or notify based on skills.json config.
+"""Check upstream skill sources and notify when they differ from local copies.
 
-Modes:
-  - sync:   auto-download upstream file and update local copy + md5
-  - notify: only print a warning when upstream differs
+All skills use notify mode: prints a warning when upstream differs,
+then the user reviews and updates manually.
 """
 
 import hashlib
@@ -43,7 +42,6 @@ def main() -> int:
         name = skill["name"]
         local_path = SCRIPT_DIR / skill["local_path"]
         upstream_url = skill["upstream_url"]
-        mode = skill.get("mode", "notify")
         recorded_md5 = skill.get("md5", "")
 
         print(f"[{name}] Checking upstream: {upstream_url}")
@@ -61,21 +59,11 @@ def main() -> int:
             print(f"  ✓ Up to date ({upstream_md5})")
             continue
 
-        if mode == "sync":
-            local_path.parent.mkdir(parents=True, exist_ok=True)
-            local_path.write_bytes(upstream_data)
-            skill["md5"] = upstream_md5
-            changed = True
-            if upstream_md5 == local_md5:
-                print(f"  ✓ MD5 record updated ({upstream_md5})")
-            else:
-                print(f"  ↓ Synced: {local_md5 or '(new)'} → {upstream_md5}")
-        else:
-            has_notify = True
-            skill["md5"] = upstream_md5
-            changed = True
-            print(f"  ⚠ Upstream changed: {recorded_md5} → {upstream_md5}")
-            print(f"    Review: {upstream_url}")
+        has_notify = True
+        skill["md5"] = upstream_md5
+        changed = True
+        print(f"  ⚠ Upstream changed: {recorded_md5} → {upstream_md5}")
+        print(f"    Review: {upstream_url}")
 
     if changed:
         MANIFEST.write_text(json.dumps(skills, indent=2) + "\n")
