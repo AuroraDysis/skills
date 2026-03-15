@@ -46,24 +46,25 @@ curl -s "https://alphaxiv.org/overview/{PAPER_ID}.md"
 
 This returns the intermediate machine-readable report — a structured, detailed analysis of the paper optimized for LLM consumption. One call, plain markdown, no JSON parsing.
 
-If this returns 404, the report hasn't been generated for this paper yet.
+If this returns 404, skip to Step 3.
 
-### Step 3: If you need more detail, fetch the full paper text
+### Step 3: Fetch the full paper text
 
-If the report doesn't contain the specific information the user is asking about (e.g. a particular equation, table, or section), fetch the full paper text:
+Fetch the full paper text if:
+- The overview returned 404 in Step 2, OR
+- The overview doesn't contain the specific information the user is asking about (e.g. a particular equation, table, or section)
 
 ```bash
 curl -s "https://alphaxiv.org/abs/{PAPER_ID}.md"
 ```
 
-This returns the full extracted text of the paper as markdown. Only use this as a fallback — the report is usually sufficient.
+This returns the full extracted text of the paper as markdown.
 
-If this returns 404, the full text hasn't been processed yet. As a last resort, direct the user to the PDF at `https://arxiv.org/pdf/{PAPER_ID}`.
+If this also returns 404, direct the user to the PDF at `https://arxiv.org/pdf/{PAPER_ID}` as a last resort.
 
 ## Error Handling
 
-- **404 on Step 2**: Report not generated for this paper.
-- **404 on Step 3**: Full text not yet extracted for this paper.
+- **404 on both Step 2 and Step 3**: Paper not yet processed on alphaxiv. Fall back to the arxiv PDF.
 
 ## Notes
 
