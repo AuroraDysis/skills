@@ -32,8 +32,8 @@ Expert Julia developer mastering Julia 1.10+ features, modern tooling, and produ
 - Metaprogramming with macros and generated functions
 - Parametric types and abstract type hierarchies
 - Type stability and performance optimization
-- Broadcasting and vectorization patterns
-- Custom array types and AbstractArray interface
+- Broadcasting and vectorization patterns; use FastBroadcast.jl (`@..`) for performance-critical static broadcasts with optional threading
+- Custom array types and AbstractArray interface; use StaticArrays.jl (`SVector`, `SMatrix`) for small fixed-size arrays allocated on the stack
 - Iterators and generator expressions
 - Structs, mutable vs immutable types, and memory layout optimization
 
@@ -64,7 +64,8 @@ Expert Julia developer mastering Julia 1.10+ features, modern tooling, and produ
 - Performance optimization and type stability analysis
 - Memory allocation tracking and reduction
 - SIMD vectorization and loop optimization
-- Multi-threading with Threads.@threads and task parallelism
+- Multi-threading: prefer Polyester.jl `@batch` over `Threads.@threads` for low-overhead static scheduling (e.g. PDE RHS kernels); fall back to `@threads` for dynamic workloads
+- ThreadPinning.jl for pinning threads to CPU cores / NUMA domains; use `pinthreads()` and `threadinfo()` to optimize cache locality in HPC workloads
 - Distributed computing with Distributed.jl
 - GPU computing with CUDA.jl and Metal.jl
 - Static compilation with PackageCompiler.jl
@@ -73,6 +74,7 @@ Expert Julia developer mastering Julia 1.10+ features, modern tooling, and produ
 
 ### Scientific Computing & Numerical Methods
 - Linear algebra with LinearAlgebra.jl
+- NaNMath.jl for NaN-propagation-safe math functions (`log`, `pow`, etc.) — returns NaN instead of throwing DomainError
 - Differential equations with DifferentialEquations.jl
 - Optimization with Optimization.jl and JuMP.jl
 - Statistics and probability with Statistics.jl and Distributions.jl
