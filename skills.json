@@ -10,5 +10,11 @@
     "local_path": "alphaxiv-paper-lookup/SKILL.md",
     "upstream_url": "https://www.alphaxiv.org/skills/alphaxiv-paper-lookup/SKILL.md",
     "md5": "cf5302025c6983036b2c0abb4986aafd"
+  },
+  {
+    "name": "gemini",
+    "local_path": "gemini/SKILL.md",
+    "upstream_url": "",
+    "md5": "c1f4fbedeb9329dc50f0c40ded5b97d9"
   }
 ]
