@@ -9,8 +9,8 @@ Look up any arxiv paper on alphaxiv.org to get a structured AI-generated overvie
 
 ## When to Use
 
-- User shares an arxiv URL (e.g. `arxiv.org/abs/2401.12345`)
-- User mentions a paper ID (e.g. `2401.12345`)
+- User shares an arxiv URL (e.g. `arxiv.org/abs/2401.12345` or `arxiv.org/abs/gr-qc/9908012`)
+- User mentions a paper ID (e.g. `2401.12345` or `gr-qc/9908012`)
 - User asks you to explain, summarize, or analyze a research paper
 - User shares an alphaxiv URL (e.g. `alphaxiv.org/overview/2401.12345`)
 
@@ -18,15 +18,25 @@ Look up any arxiv paper on alphaxiv.org to get a structured AI-generated overvie
 
 ### Step 1: Extract the paper ID
 
+arXiv has two ID formats:
+
+- **New format** (April 2007+): `YYMM.NNNNN` (e.g. `2401.12345`)
+- **Old format** (pre-2007): `category/YYMMNNN` (e.g. `gr-qc/9908012`, `hep-th/0001234`)
+
 Parse the paper ID from whatever the user provides:
 
-| Input                                      | Paper ID       |
-| ------------------------------------------ | -------------- |
-| `https://arxiv.org/abs/2401.12345`         | `2401.12345`   |
-| `https://arxiv.org/pdf/2401.12345`         | `2401.12345`   |
-| `https://alphaxiv.org/overview/2401.12345` | `2401.12345`   |
-| `2401.12345v2`                             | `2401.12345v2` |
-| `2401.12345`                               | `2401.12345`   |
+| Input                                          | Paper ID         |
+| ---------------------------------------------- | ---------------- |
+| `https://arxiv.org/abs/2401.12345`             | `2401.12345`     |
+| `https://arxiv.org/pdf/2401.12345`             | `2401.12345`     |
+| `https://arxiv.org/abs/gr-qc/9908012`          | `gr-qc/9908012`  |
+| `https://arxiv.org/pdf/gr-qc/9908012`          | `gr-qc/9908012`  |
+| `https://alphaxiv.org/overview/2401.12345`     | `2401.12345`     |
+| `https://alphaxiv.org/overview/gr-qc/9908012`  | `gr-qc/9908012`  |
+| `2401.12345v2`                                 | `2401.12345v2`   |
+| `2401.12345`                                   | `2401.12345`     |
+| `gr-qc/9908012`                                | `gr-qc/9908012`  |
+| `hep-th/0001234v2`                             | `hep-th/0001234v2` |
 
 ### Step 2: Fetch the machine-readable report
 
