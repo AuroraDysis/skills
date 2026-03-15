@@ -37,7 +37,9 @@ def main() -> int:
 
     for skill in skills:
         name = skill["name"]
-        upstream_url = skill["upstream_url"]
+        upstream_url = skill.get("upstream_url", "")
+        if not upstream_url:
+            continue
         recorded_md5 = skill.get("md5", "")
 
         print(f"[{name}] Checking upstream: {upstream_url}")
