@@ -15,5 +15,10 @@
     "name": "gemini",
     "local_path": "gemini/SKILL.md",
     "upstream_url": ""
+  },
+  {
+    "name": "julia-numerical",
+    "local_path": "julia-numerical/SKILL.md",
+    "upstream_url": "https://raw.githubusercontent.com/sickn33/antigravity-awesome-skills/main/skills/julia-pro/SKILL.md"
   }
 ]
