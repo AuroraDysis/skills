@@ -19,9 +19,6 @@ def md5_bytes(data: bytes) -> str:
     return hashlib.md5(data).hexdigest()
 
 
-def md5_file(path: Path) -> str:
-    return md5_bytes(path.read_bytes())
-
 
 def fetch(url: str) -> bytes:
     req = urllib.request.Request(url, headers={"User-Agent": "skills-sync/1.0"})
@@ -40,7 +37,6 @@ def main() -> int:
 
     for skill in skills:
         name = skill["name"]
-        local_path = SCRIPT_DIR / skill["local_path"]
         upstream_url = skill["upstream_url"]
         recorded_md5 = skill.get("md5", "")
 
@@ -53,9 +49,8 @@ def main() -> int:
             continue
 
         upstream_md5 = md5_bytes(upstream_data)
-        local_md5 = md5_file(local_path) if local_path.exists() else ""
 
-        if upstream_md5 == local_md5 and upstream_md5 == recorded_md5:
+        if upstream_md5 == recorded_md5:
             print(f"  ✓ Up to date ({upstream_md5})")
             continue
 
