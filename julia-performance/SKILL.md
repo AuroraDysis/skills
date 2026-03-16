@@ -3,7 +3,7 @@ name: julia-performance
 description: Julia performance optimization guide — type stability, allocation reduction, memory layout, SIMD, profiling, and performance annotations. Use whenever writing or reviewing Julia code for performance, diagnosing slow Julia code, reducing allocations, or asking about @code_warntype, @inbounds, @fastmath, @simd, type instability, or Julia profiling.
 ---
 
-Distilled from the official Julia Performance Tips. For detailed examples and edge cases, read `references/official-performance-tips.md`. For general Julia development practices, see the `julia-dev` skill. For PDE/ODE solving packages, see the `julia-pde` skill.
+Distilled from the official Julia docs. For detailed examples and edge cases, read `references/official-performance-tips.md`. For profiling details, read `references/official-profiling.md`. For general Julia development practices, see the `julia-dev` skill. For PDE/ODE solving packages, see the `pde-workflow` skill.
 
 ## Core Principle
 
@@ -179,11 +179,38 @@ These compose: `@fastmath @inbounds @simd for i in eachindex(u) ... end`
 - **Fix all deprecation warnings** — deprecated functions do an extra lookup per call
 - **Subnormal numbers**: `set_zero_subnormals(true)` can speed up computations that produce many subnormals (e.g. exponential decay), but breaks some floating-point identities
 
+## Profiling
+
+For full details and examples, read `references/official-profiling.md`.
+
+### CPU Profiling
+```julia
+using Profile
+@profile my_function()
+Profile.print()  # text-based output
+```
+- Always run the function once before profiling (to exclude compilation)
+- Visualizers: **PProf.jl** (web-based, recommended), **ProfileView.jl** (GTK flamegraph), **VS Code** (built-in support), **ProfileCanvas.jl** (HTML)
+- `Profile.@profile_walltime` for wall-time profiling — samples all live tasks, not just running ones. Useful for diagnosing I/O-bound or task-scheduling issues.
+
+### Memory / Allocation Profiling
+- **`@time`** (run twice): check the allocations count and GC time. Unexpected allocations = type problem.
+- **`@allocated`** / **`@allocations`**: measure allocations of a specific expression
+- **Allocation profiler** (Julia 1.8+):
+  ```julia
+  Profile.Allocs.@profile sample_rate=0.001 my_function()
+  PProf.Allocs.pprof()  # visualize allocation call stacks
+  ```
+  Aim for 1K-10K samples. Adjust `sample_rate` accordingly (0.001 = record 0.1% of allocations).
+- **`--track-allocation=user`**: launch Julia with this flag to produce `.mem` files showing per-line allocation counts
+- **GC logging**: `GC.enable_logging(true)` to see every GC event on stderr
+
 ## Diagnostic Workflow
 
-1. **Profile first**: `@time` to find unexpected allocations, `Profile.@profile` + `ProfileView` to find hotspots
-2. **Check type stability**: `@code_warntype` on the hot function
-3. **Fix the type issue**: concrete fields, function barriers, consistent return types
-4. **Re-measure**: verify allocations dropped and time improved
-5. **Then annotate**: `@inbounds`, `@simd`, `@fastmath` only on verified hot loops
-6. **Advanced tools**: JET.jl for static analysis, `--track-allocation=user` for allocation source tracking
+1. **Measure**: `@time` (run twice) to find unexpected allocations
+2. **Profile**: `Profile.@profile` + PProf/ProfileView to find CPU hotspots
+3. **Check type stability**: `@code_warntype` on the hot function
+4. **Fix the type issue**: concrete fields, function barriers, consistent return types
+5. **Re-measure**: verify allocations dropped and time improved
+6. **Annotate**: `@inbounds`, `@simd`, `@fastmath` only on verified hot loops
+7. **Allocation drill-down**: if allocations persist, use `Profile.Allocs.@profile` to find exact call stacks
