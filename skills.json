@@ -17,8 +17,18 @@
     "upstream_url": ""
   },
   {
-    "name": "julia-numerical",
-    "local_path": "julia-numerical/SKILL.md",
-    "upstream_url": "https://raw.githubusercontent.com/sickn33/antigravity-awesome-skills/main/skills/julia-pro/SKILL.md"
+    "name": "julia-dev",
+    "local_path": "julia-dev/SKILL.md",
+    "upstream_url": ""
+  },
+  {
+    "name": "julia-pde",
+    "local_path": "julia-pde/SKILL.md",
+    "upstream_url": ""
+  },
+  {
+    "name": "julia-performance",
+    "local_path": "julia-performance/SKILL.md",
+    "upstream_url": ""
   }
 ]
